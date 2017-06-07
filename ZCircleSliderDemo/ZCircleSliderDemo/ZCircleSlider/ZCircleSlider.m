@@ -304,6 +304,8 @@
     [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
 }
 
+#pragma mark - Handle move
+
 - (void)moveHandlerWithPoint:(CGPoint)point {
     self.interaction = YES;
     CGFloat centerX = self.drawCenter.x;
@@ -371,6 +373,7 @@
     self.value = angle / 360;
 }
 
+#pragma mark - Util
 
 /**
  计算圆上两点间的角度
