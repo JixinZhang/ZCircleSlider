@@ -158,6 +158,11 @@
 
 #pragma mark - action
 
+/*以下三个方法，都要添加对slider.interaction的判断。
+ *因为虽然看起来是个圆环，但是响应手势的区域确实整个矩形的View
+ *在内部添加了interaction这个属性用于限定响应区域，在规定的区
+ */
+
 - (IBAction)circleSliderTouchDown:(ZCircleSlider *)slider {
     if (!slider.interaction) {
         return;
