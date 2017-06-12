@@ -2,16 +2,14 @@
 
 圆环型Slider，其作用和UISlider一样。
 
-##0. Demo
+## 0. Demo
 
-![1.重复拖动](https://github.com/JixinZhang/ZCircleSlider/blob/master/CircleSlider1.gif)
+![1.重复拖动](https://github.com/JixinZhang/ZCircleSlider/blob/master/CircleSlider1.gif) ![2.限定360度](https://github.com/JixinZhang/ZCircleSlider/blob/master/CircleSlider2.gif)
 
-![2.限定360度](https://github.com/JixinZhang/ZCircleSlider/blob/master/CircleSlider2.gif)
-
-##1. 接入
+## 1. 接入
 直接将ZCircleSlider文件夹中的`ZCircleSlider.h 和 ZCircleSlider.m`拖到项目中
 
-##2. 使用
+## 2. 使用
 
 ```
 - (ZCircleSlider *)circleSlider {
