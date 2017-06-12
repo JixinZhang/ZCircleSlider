@@ -171,15 +171,18 @@
     CGFloat loadStart = -M_PI_2;
     CGFloat loadCurre = loadStart + 2 * M_PI * self.loadProgress;
     
-    CGContextSetStrokeColorWithColor(ctx, self.maximumTrackTintColor.CGColor);
-    CGContextSetLineWidth(ctx, self.circleBorderWidth);
     [loadPath addArcWithCenter:self.drawCenter
                         radius:self.radius
                     startAngle:loadStart
                       endAngle:loadCurre
                      clockwise:YES];
+    CGContextSaveGState(ctx);
+    CGContextSetShouldAntialias(ctx, YES);
+    CGContextSetLineWidth(ctx, self.circleBorderWidth);
+    CGContextSetStrokeColorWithColor(ctx, self.maximumTrackTintColor.CGColor);
     CGContextAddPath(ctx, loadPath.CGPath);
     CGContextDrawPath(ctx, kCGPathStroke);
+    CGContextRestoreGState(ctx);
     
     //起始位置做圆滑处理
     CGContextSaveGState(ctx);
@@ -199,6 +202,7 @@
                         endAngle:currentOrigin
                        clockwise:YES];
     CGContextSaveGState(ctx);
+    CGContextSetShouldAntialias(ctx, YES);
     CGContextSetLineWidth(ctx, self.circleBorderWidth);
     CGContextSetStrokeColorWithColor(ctx, self.minimumTrackTintColor.CGColor);
     CGContextAddPath(ctx, circlePath.CGPath);
