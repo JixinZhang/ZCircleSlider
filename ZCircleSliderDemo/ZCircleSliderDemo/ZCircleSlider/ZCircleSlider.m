@@ -371,20 +371,20 @@
      */
     double sinAlpha = (moveX - centerX) / dist;
     double xT = self.radius * sinAlpha + centerX;
+    NSLog(@"xT = %.3f",xT);
     double yT = sqrt((self.radius * self.radius - (xT - centerX) * (xT - centerX))) + centerY;
-//    if (moveY < centerY) {
-//        yT = centerY - fabs(yT - centerY);
-//    }
+    if (moveY < centerY) {
+        NSLog(@"moveY < centerY");
+        yT = centerY - fabs(yT - centerY);
+    }
+
+    self.lastPoint = self.thumbView.center = CGPointMake(xT, yT);
+    
     CGFloat angle = [ZCircleSlider calculateAngleWithRadius:self.radius
                                                      center:self.drawCenter
                                                 startCenter:self.circleStartPoint
                                                   endCenter:point];
 
-    if (angle >= 0.25 * 360 || angle < 0.75 * 360) {
-        yT = centerY - fabs(yT - centerY);
-    }
-    self.lastPoint = self.thumbView.center = CGPointMake(xT, yT);
-    
 //    if (angle >= 300) {
 //        //当当前角度大于等于300度时禁止移动到第一、二、三象限
 //        self.lockClockwise = YES;
@@ -420,9 +420,9 @@
                           endCenter:(CGPoint)endCenter {
     //a^2 = b^2 + c^2 - 2bccosA;
     CGFloat cosA = (2 * radius * radius - powf([ZCircleSlider distanceBetweenPointA:startCenter pointB:endCenter], 2)) / (2 * radius * radius);
-    CGFloat angle = 180 / M_PI * acosf(cosA);
+    CGFloat angle = (180 / M_PI) * acosf(cosA);
     if (startCenter.x > endCenter.x) {
-        angle = 360 - angle;
+//        angle = 360 - angle;
     }
     return angle;
 }
