@@ -19,7 +19,7 @@
     self.title = @"Circle Slider";
     
     self.datas = @[@{@"name":@"圆环形Slider，重复拖动", @"class":@"FirstViewController"},
-                @{@"name":@"圆环形Slider，限定360度", @"class":@"SecondViewController"}];
+                   @{@"name":@"圆环形Slider，限定360度", @"class":@"SecondViewController"}];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
 

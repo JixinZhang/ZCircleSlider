@@ -58,6 +58,8 @@
         _circleSlider.circleRadius = 260 / 2.0 + 2;
         _circleSlider.value = 0;
         _circleSlider.loadProgress = 0;
+        _circleSlider.thumbStartPosition = 0.13;
+        _circleSlider.canRepeat = YES;
         [_circleSlider addTarget:self
                           action:@selector(circleSliderTouchDown:)
                 forControlEvents:UIControlEventTouchDown];

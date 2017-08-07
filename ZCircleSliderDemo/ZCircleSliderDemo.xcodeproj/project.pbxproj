@@ -356,6 +356,7 @@
 				78F86A671EE0225C0016F81E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

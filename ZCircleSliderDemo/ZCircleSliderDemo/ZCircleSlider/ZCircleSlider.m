@@ -61,6 +61,7 @@
     self.minimumTrackTintColor = [UIColor blueColor];
     
     self.drawCenter = CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0);
+    self.thumbStartPosition = 0.0f;
     self.circleStartPoint = CGPointMake(self.drawCenter.x, self.drawCenter.y - self.circleRadius);
     self.loadProgress = 1.0;
     self.interaction = NO;
@@ -124,6 +125,11 @@
     [self setNeedsDisplay];
 }
 
+- (void)setThumbStartPosition:(CGFloat)thumbStartPosition {
+    _thumbStartPosition = thumbStartPosition;
+    [self setNeedsDisplay];
+}
+
 - (void)setCircleRadius:(CGFloat)circleRadius {
     _circleRadius = circleRadius;
     self.circleStartPoint = CGPointMake(self.drawCenter.x, self.drawCenter.y - self.circleRadius);
@@ -156,7 +162,17 @@
 - (void)drawRect:(CGRect)rect {
     self.drawCenter = CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0);
     self.radius = self.circleRadius;
-    self.circleStartPoint = CGPointMake(self.drawCenter.x, self.drawCenter.y - self.circleRadius);
+    
+    double beta = self.thumbStartPosition * 2 * M_PI;
+    double x1 = self.radius * sin(beta) + self.drawCenter.x;
+    double y1 = sqrt(self.radius * self.radius - pow((self.drawCenter.x - x1), 2)) + self.drawCenter.y;
+    double a1 = y1 - self.drawCenter.y;
+    if (self.thumbStartPosition <= 0.25 || self.thumbStartPosition > 0.75) {
+        y1 = self.drawCenter.y - a1;
+    }
+    self.circleStartPoint = CGPointMake(x1, y1);
+    
+//    self.circleStartPoint = CGPointMake(self.drawCenter.x, self.drawCenter.y - self.circleRadius);
 
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
@@ -168,7 +184,7 @@
   
     //加载的进度
     UIBezierPath *loadPath = [UIBezierPath bezierPath];
-    CGFloat loadStart = -M_PI_2;
+    CGFloat loadStart = -M_PI_2 + self.thumbStartPosition * M_PI * 2;
     CGFloat loadCurre = loadStart + 2 * M_PI * self.loadProgress;
     
     [loadPath addArcWithCenter:self.drawCenter
@@ -194,7 +210,7 @@
     
     //value
     UIBezierPath *circlePath = [UIBezierPath bezierPath];
-    CGFloat originstart = -M_PI_2;
+    CGFloat originstart = -M_PI_2 + self.thumbStartPosition * M_PI * 2;
     CGFloat currentOrigin = originstart + 2 * M_PI * self.value;
     [circlePath addArcWithCenter:self.drawCenter
                           radius:self.radius
@@ -216,11 +232,16 @@
      * y 可以通过r * cos(alpha) + 圆心的y坐标来计算。
      * 不过我这里用了另外一个比较投机的方法，先算出亮点连线在y轴上投影的长度，然后根据移动点在y轴上相对于圆心的位置将这个绝对长度a和圆心y坐标相加减。
      */
-    double alpha = self.value * 2 * M_PI;
+    double alpha = self.value * 2 * M_PI + self.thumbStartPosition * M_PI * 2;
     double x = self.radius * sin(alpha) + self.drawCenter.x;
     double y = sqrt(self.radius * self.radius - pow((self.drawCenter.x - x), 2)) + self.drawCenter.y;
     double a = y - self.drawCenter.y;
-    if (self.value <= 0.25 || self.value > 0.75) {
+    double value = self.value + self.thumbStartPosition;
+    if (value > 1.0) {
+        value -= 1.0;
+    }
+//    NSLog(@"value + start = %.3f",value);
+    if (value <= 0.25 || value > 0.75) {
         y = self.drawCenter.y - a;
     }
     self.lastPoint = CGPointMake(x, y);
@@ -351,28 +372,33 @@
     double sinAlpha = (moveX - centerX) / dist;
     double xT = self.radius * sinAlpha + centerX;
     double yT = sqrt((self.radius * self.radius - (xT - centerX) * (xT - centerX))) + centerY;
-    if (moveY < centerY) {
+//    if (moveY < centerY) {
+//        yT = centerY - fabs(yT - centerY);
+//    }
+    CGFloat angle = [ZCircleSlider calculateAngleWithRadius:self.radius
+                                                     center:self.drawCenter
+                                                startCenter:self.circleStartPoint
+                                                  endCenter:point];
+
+    if (angle >= 0.25 * 360 || angle < 0.75 * 360) {
         yT = centerY - fabs(yT - centerY);
     }
     self.lastPoint = self.thumbView.center = CGPointMake(xT, yT);
     
-    CGFloat angle = [ZCircleSlider calculateAngleWithRadius:self.radius
-                                                     center:self.drawCenter
-                                                startCenter:self.circleStartPoint
-                                                  endCenter:self.lastPoint];
-    if (angle >= 300) {
-        //当当前角度大于等于300度时禁止移动到第一、二、三象限
-        self.lockClockwise = YES;
-    } else {
-        self.lockClockwise = NO;
-    }
-    
-    if (angle <= 60.0) {
-        //当当前角度小于等于60度时，禁止移动到第二、三、四象限
-        self.lockAntiClockwise = YES;
-    } else {
-        self.lockAntiClockwise = NO;
-    }
+//    if (angle >= 300) {
+//        //当当前角度大于等于300度时禁止移动到第一、二、三象限
+//        self.lockClockwise = YES;
+//    } else {
+//        self.lockClockwise = NO;
+//    }
+//    
+//    if (angle <= 60.0) {
+//        //当当前角度小于等于60度时，禁止移动到第二、三、四象限
+//        self.lockAntiClockwise = YES;
+//    } else {
+//        self.lockAntiClockwise = NO;
+//    }
+    NSLog(@"angle = %3f",angle);
     self.angle = angle;
     self.value = angle / 360;
 }
