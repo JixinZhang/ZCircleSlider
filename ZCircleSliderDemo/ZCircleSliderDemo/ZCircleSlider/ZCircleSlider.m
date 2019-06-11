@@ -243,12 +243,12 @@
     }
     //如果点击点和圆心的距离大于44，不做操作。
     //以上两步是用来限定滑块的点击范围，距离滑块太远不操作，距离圆心太远或太近不操作
-    double dist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.drawCenter];
-    if (fabs(dist - self.radius) > 44) {
-        self.interaction = NO;
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
-        return YES;
-    }
+//    double dist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.drawCenter];
+//    if (fabs(dist - self.radius) > 44) {
+//        self.interaction = NO;
+//        [self sendActionsForControlEvents:UIControlEventValueChanged];
+//        return YES;
+//    }
     self.thumbView.center = self.lastPoint;
     //点击后滑块放大及动画
     CGFloat expandRate = self.thumbExpandRadius / self.thumbRadius;
@@ -267,16 +267,16 @@
     [super continueTrackingWithTouch:touch withEvent:event];
     CGPoint starTouchPoint = [touch locationInView:self];
     
-    double touchDist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.lastPoint];
-    if (touchDist > 44) {
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
-        return YES;
-    }
-    double dist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.drawCenter];
-    if (fabs(dist - self.radius) > 44) {
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
-        return YES;
-    }
+//    double touchDist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.lastPoint];
+//    if (touchDist > 44) {
+//        [self sendActionsForControlEvents:UIControlEventValueChanged];
+//        return YES;
+//    }
+//    double dist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.drawCenter];
+//    if (fabs(dist - self.radius) > 44) {
+//        [self sendActionsForControlEvents:UIControlEventValueChanged];
+//        return YES;
+//    }
     [self moveHandlerWithPoint:starTouchPoint];
     [self sendActionsForControlEvents:UIControlEventValueChanged];
     return YES;
@@ -294,16 +294,16 @@
     
     CGPoint starTouchPoint = [touch locationInView:self];
     
-    double touchDist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.lastPoint];
-    if (touchDist > 44) {
-        [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
-        return;
-    }
-    double dist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.drawCenter];
-    if (fabs(dist - self.radius) > 44) {
-        [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
-        return;
-    }
+//    double touchDist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.lastPoint];
+//    if (touchDist > 44) {
+//        [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
+//        return;
+//    }
+//    double dist = [ZCircleSlider distanceBetweenPointA:starTouchPoint pointB:self.drawCenter];
+//    if (fabs(dist - self.radius) > 44) {
+//        [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
+//        return;
+//    }
     [self moveHandlerWithPoint:starTouchPoint];
     [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
 }
@@ -339,7 +339,8 @@
     }
     
     double dist = sqrt(pow((moveX - centerY), 2) + pow(moveY - centerY, 2));
-    if (fabs(dist - self.radius) > 44) {
+    if ((dist - self.radius) < -64) {
+        NSLog(@"===== %.3f ",dist - self.radius);
         return;
     }
     /*
